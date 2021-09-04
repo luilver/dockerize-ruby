@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'dockerize-ruby'
-  s.version     = '0.0.1'
+  s.version     = '0.0.2'
   s.executables << 'dockerize-ruby'
   s.summary     = "A ruby gem for dockerize your app!"
   s.description = "This ruby tool will be intended to help you dockerize any ruby app"
