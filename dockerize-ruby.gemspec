@@ -1,6 +1,8 @@
+require File.join([File.dirname(__FILE__),"lib","dockerize-ruby","version.rb"])
+
 Gem::Specification.new do |s|
   s.name        = 'dockerize-ruby'
-  s.version     = '0.0.3'
+  s.version     = DockerizeRuby::VERSION
   s.executables << 'dockerize-ruby'
   s.summary     = "A ruby gem for dockerize your app!"
   s.description =
