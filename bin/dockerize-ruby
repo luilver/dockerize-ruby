@@ -1,0 +1,26 @@
+#!/usr/bin/env ruby
+
+require 'dockerize-ruby'
+require 'gli'
+
+class App
+  extend GLI::App
+
+  program_desc 'A simple docker generation file tool'
+
+  desc 'Generates a docker-compose.yml'
+  command :dockercompose do |c|
+    c.action do
+      Dockerize.dockercompose
+    end
+  end
+
+  desc 'Generates a Dockerfile'
+  command :dockerfile do |c|
+    c.action do
+      Dockerize.dockerfile
+    end
+  end
+end
+
+exit App.run(ARGV)
