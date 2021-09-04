@@ -6,6 +6,8 @@ require 'gli'
 class App
   extend GLI::App
 
+  subcommand_option_handling: normal
+
   program_desc 'A simple docker generation file tool'
 
   desc 'Generates a docker-compose.yml'
