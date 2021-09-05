@@ -23,6 +23,13 @@ class App
       Dockerize.dockerfile
     end
   end
+
+  desc 'Generates an entrypoint.sh'
+  command :entrypoint do |c|
+    c.action do
+      Dockerize.entrypoint
+    end
+  end
 end
 
 exit App.run(ARGV)
