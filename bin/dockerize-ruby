@@ -22,7 +22,7 @@ class App
     end
   end
 
-  desc 'Generates a entrypoint.sh'
+  desc 'Generates an entrypoint.sh'
   command :entrypoint do |c|
     c.action do
       Dockerize.entrypoint
