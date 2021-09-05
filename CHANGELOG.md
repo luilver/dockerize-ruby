@@ -11,6 +11,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   * Ruby version
   * Exposed port
 
+## [0.0.5] - 2021-09-04
+### Added
+- Function to generate entrypoint.sh
+### Fixed
+- Mismatched indentations
+
 ## [0.0.4] - 2021-09-03
 ### Added
 - Development and runtime dependencies
