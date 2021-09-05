@@ -12,6 +12,11 @@ class DockerizeTest < Minitest::Test
     assert_path_exists "./docker-compose.yml"
   end
 
+  def test_entrypoint
+    Dockerize.entrypoint
+    assert_path_exists "./entrypoint.sh"
+  end
+
   def test_true
     assert true
   end
