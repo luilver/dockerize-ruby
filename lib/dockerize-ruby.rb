@@ -29,11 +29,13 @@ services:
     image: postgres
     volumes:
       - ./tmp/db:/var/lib/postgresql/data
+    ports:
+      - \"5432:5432\"
     environment:
       POSTGRES_PASSWORD: password
   web:
     build: .
-    command: bash -c \"rm -f tmp/pids/server.pid && bundle exec rails s -p 3000 -b '0.0.0.0'\"
+    command: bash -c \"rm -f tmp/pids/server.pid && bundle exec rails db:migrate && bundle exec rails s -p 3000 -b '0.0.0.0'\"
     volumes:
       - .:/myapp
     ports:
