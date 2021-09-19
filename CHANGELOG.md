@@ -11,7 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Second level parameters:
   * Exposed port
 
-## [0.0.7] - 2021-09-19
+## [0.1.0] - 2021-09-19
+### Fixed
+- Export and migrate db
+
+## [0.0.8] - 2021-09-19
 ### Fixed
 - error: RUN bundle install 2.2.17
 
