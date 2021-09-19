@@ -1,8 +1,8 @@
 class Dockerize
-  def self.dockerfile
+  def self.dockerfile(options: {})
     File.open("Dockerfile", 'w') do |file|
       file.write """# syntax=docker/dockerfile:1
-FROM ruby:2.5
+FROM ruby:#{options[:ruby_version]}
 RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
 WORKDIR /myapp
 COPY Gemfile /myapp/Gemfile

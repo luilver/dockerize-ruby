@@ -6,7 +6,8 @@ require 'gli'
 class App
   extend GLI::App
 
-  subcommand_option_handling: normal
+  subcommand_option_handling :normal
+  arguments :strict
 
   program_desc 'A simple docker generation file tool'
 
@@ -18,9 +19,13 @@ class App
   end
 
   desc 'Generates a Dockerfile'
+  arg_name '<arg>...', %i(:multiple)
   command :dockerfile do |c|
-    c.action do
-      Dockerize.dockerfile
+    c.desc 'Pass a ruby version argument'
+    c.flag :ruby_version, type: String
+
+    c.action do |globals, options, args|
+      Dockerize.dockerfile options: options
     end
   end
 
