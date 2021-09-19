@@ -8,8 +8,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Document development instructions
 - Development dependencies
 - Second level parameters:
-  * Ruby version
   * Exposed port
+
+## [0.0.7] - 2021-09-19
+### Added
+- Second level parameters:
+  * Bundler version
+  * Ruby version
 
 ## [0.0.6] - 2021-09-04
 ### Fixed
