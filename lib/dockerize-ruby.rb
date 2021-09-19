@@ -7,7 +7,7 @@ RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
 WORKDIR /myapp
 COPY Gemfile /myapp/Gemfile
 COPY Gemfile.lock /myapp/Gemfile.lock
-RUN bundle install
+RUN bundle install #{options[:bundler_version]}
 
 # Add a script to be executed every time the container starts.
 COPY entrypoint.sh /usr/bin/

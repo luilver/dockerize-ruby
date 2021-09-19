@@ -21,6 +21,9 @@ class App
   desc 'Generates a Dockerfile'
   arg_name '<arg>...', %i(:multiple)
   command :dockerfile do |c|
+    c.desc 'Pass a bundler version argument'
+    c.flag :bundler_version, type: String
+
     c.desc 'Pass a ruby version argument'
     c.flag :ruby_version, type: String
 
