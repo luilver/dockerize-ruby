@@ -1,60 +1,65 @@
+require 'openai'
+require 'json'
+
 class Dockerize
+  OPENAI_API_KEY = ENV['OPENAI_API_KEY']
+  MODEL = "gpt-4"
+
   def self.dockerfile(options: {})
-    File.open("Dockerfile", 'w') do |file|
-      file.write """# syntax=docker/dockerfile:1
-FROM ruby:#{options[:ruby_version]}
-RUN apt-get update -qq && apt-get install -y nodejs postgresql-client
-WORKDIR /myapp
-COPY Gemfile /myapp/Gemfile
-COPY Gemfile.lock /myapp/Gemfile.lock
-RUN gem install bundler -v #{options[:bundler_version]}
-RUN bundle install
-
-# Add a script to be executed every time the container starts.
-COPY entrypoint.sh /usr/bin/
-RUN chmod +x /usr/bin/entrypoint.sh
-ENTRYPOINT [\"entrypoint.sh\"]
-EXPOSE 3000
-
-# Configure the main process to run when running the image
-CMD [\"rails\", \"server\", \"-b\", \"0.0.0.0\"]"""
-    end
+    content = generate_dockerfile(options)
+    File.open("Dockerfile", 'w') { |file| file.write(content) }
   end
 
   def self.dockercompose
-    File.open("docker-compose.yml", 'w') do |file|
-      file.write """version: \"3.9\"
-services:
-  db:
-    image: postgres
-    volumes:
-      - ./tmp/db:/var/lib/postgresql/data
-    ports:
-      - \"5432:5432\"
-    environment:
-      POSTGRES_PASSWORD: password
-  web:
-    build: .
-    command: bash -c \"rm -f tmp/pids/server.pid && bundle exec rails db:migrate && bundle exec rails s -p 3000 -b '0.0.0.0'\"
-    volumes:
-      - .:/myapp
-    ports:
-      - \"3000:3000\"
-    depends_on:
-      - db"""
-    end
+    content = generate_dockercompose
+    File.open("docker-compose.yml", 'w') { |file| file.write(content) }
   end
 
   def self.entrypoint
-    File.open("entrypoint.sh", 'w') do |file|
-      file.write """#!/bin/bash
+    content = """#!/bin/bash
 set -e
-
-# Remove a potentially pre-existing server.pid for Rails.
 rm -f /myapp/tmp/pids/server.pid
+exec "$@"
+"""
+    File.open("entrypoint.sh", 'w') { |file| file.write(content) }
+  end
 
-# Then exec the container's main process (what's set as CMD in the Dockerfile).
-exec \"$@\""""
-    end
+  private
+
+  def self.generate_dockerfile(options)
+    prompt = """
+Generate a Dockerfile for a Ruby on Rails application with the following specifications:
+- Ruby version: #{options[:ruby_version]}
+- Bundler version: #{options[:bundler_version]}
+- Include PostgreSQL client and Node.js
+- Set up working directory `/myapp`
+- Install dependencies from Gemfile
+- Use entrypoint script `/usr/bin/entrypoint.sh`
+- Expose port 3000 and run Rails server
+"""
+    call_openai(prompt)
+  end
+
+  def self.generate_dockercompose
+    prompt = """
+Generate a docker-compose.yml file for a Ruby on Rails application with the following setup:
+- PostgreSQL database service with volume storage
+- Web service that depends on the database
+- Proper command setup for starting the Rails app
+- Port mappings: 3000 for web, 5432 for database
+- Bind-mount the application directory
+"""
+    call_openai(prompt)
+  end
+
+  def self.call_openai(prompt)
+    client = OpenAI::Client.new(access_token: OPENAI_API_KEY)
+    response = client.chat(parameters: {
+      model: MODEL,
+      messages: [{ role: "system", content: "You are an expert in Docker configurations." },
+                 { role: "user", content: prompt }],
+      max_tokens: 500
+    })
+    response.dig("choices", 0, "message", "content").strip
   end
 end

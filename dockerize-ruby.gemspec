@@ -14,8 +14,10 @@ Gem::Specification.new do |s|
     'https://github.com/luilver/dockerize-ruby'
   s.license       = 'Apache-2.0'
 
-  s.add_development_dependency 'rake'
-  s.add_development_dependency 'minitest'
+  s.add_dependency "openai", "~> 5.0"
 
-  s.add_runtime_dependency 'gli'
+  s.add_development_dependency 'rake',  '~> 13.0'
+  s.add_development_dependency 'minitest', '~> 5.0'
+
+  s.add_runtime_dependency 'gli', '~> 2.20'
 end
