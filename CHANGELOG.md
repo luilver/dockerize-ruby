@@ -5,11 +5,25 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+- Test subcommands
 - Document development instructions
 - Development dependencies
 - Second level parameters:
-  * Ruby version
   * Exposed port
+
+## [0.1.0] - 2021-09-19
+### Fixed
+- Export and migrate db
+
+## [0.0.8] - 2021-09-19
+### Fixed
+- error: RUN bundle install 2.2.17
+
+## [0.0.7] - 2021-09-19
+### Added
+- Second level parameters:
+  * Bundler version
+  * Ruby version
 
 ## [0.0.6] - 2021-09-04
 ### Fixed
