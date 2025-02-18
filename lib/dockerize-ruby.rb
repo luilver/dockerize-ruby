@@ -1,9 +1,20 @@
-require 'openai'
+require 'chatgpt'
 require 'json'
 
 class Dockerize
-  OPENAI_API_KEY = ENV['OPENAI_API_KEY']
-  MODEL = "gpt-4"
+  ChatGPT.configure do |config|
+    config.api_key = ENV['OPENAI_API_KEY']
+    config.api_version = 'v1'
+    config.default_engine = 'gpt-4'
+    config.request_timeout = 30
+    config.max_retries = 2
+    config.default_parameters = {
+      max_tokens: 300,
+      temperature: 0.5,
+      top_p: 1.0,
+      n: 1
+    }
+  end
 
   def self.dockerfile(options: {})
     content = generate_dockerfile(options)
@@ -19,7 +30,7 @@ class Dockerize
     content = """#!/bin/bash
 set -e
 rm -f /myapp/tmp/pids/server.pid
-exec "$@"
+exec $@
 """
     File.open("entrypoint.sh", 'w') { |file| file.write(content) }
   end
@@ -29,12 +40,11 @@ exec "$@"
   def self.generate_dockerfile(options)
     prompt = """
 Generate a Dockerfile for a Ruby on Rails application with the following specifications:
-- Ruby version: #{options[:ruby_version]}
-- Bundler version: #{options[:bundler_version]}
+- Ruby version: #{options[:ruby_version] || "3.3.3"}
+- Bundler version: #{options[:bundler_version] || "2.3.26"}
 - Include PostgreSQL client and Node.js
 - Set up working directory `/myapp`
 - Install dependencies from Gemfile
-- Use entrypoint script `/usr/bin/entrypoint.sh`
 - Expose port 3000 and run Rails server
 """
     call_openai(prompt)
@@ -53,13 +63,19 @@ Generate a docker-compose.yml file for a Ruby on Rails application with the foll
   end
 
   def self.call_openai(prompt)
-    client = OpenAI::Client.new(access_token: OPENAI_API_KEY)
-    response = client.chat(parameters: {
-      model: MODEL,
-      messages: [{ role: "system", content: "You are an expert in Docker configurations." },
-                 { role: "user", content: prompt }],
-      max_tokens: 500
-    })
-    response.dig("choices", 0, "message", "content").strip
+    client = ChatGPT::Client.new
+    response = client.chat(
+      [
+        { role: "system", content: "You are an expert in Docker configurations." },
+        { role: "user", content: prompt }
+      ],
+      model: 'gpt-4'
+    )
+    parse(response.dig("choices", 0, "message", "content").strip)
+  end
+
+  def self.parse(string)
+    reg = /```Dockerfile\n(.*)```/m
+    reg.match(string)[1]
   end
 end
