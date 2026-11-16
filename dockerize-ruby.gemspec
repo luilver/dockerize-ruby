@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
   s.add_dependency "openai", "~> 5.0"
 
   s.add_development_dependency 'rake',  '~> 13.0'
-  s.add_development_dependency 'minitest', '~> 5.0'
+  s.add_development_dependency 'minitest', '~> 6.0'
 
   s.add_runtime_dependency 'gli', '~> 2.20'
 end
